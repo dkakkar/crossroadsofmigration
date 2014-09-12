@@ -1,0 +1,48 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+#status{
+  position:absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 50;
+  font-weight:bold;
+  color: #ffffff;        
+}  
+
+
+#legendWrapper {
+  height: 120px;
+  width: 120px;
+  z-index: 50; 
+}
+
+
+#legend p {
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 3px;
+	margin-bottom: 10px;
+}
+
+#legend div {
+    clear: both;
+	margin-bottom: 1px;
+}
+
+.color {
+    height: 20px;
+    width: 20px;
+    margin-right: 3px;
+    float: left;
+    display: block;		
+} 
+
+.modal-sm {
+  max-width: 200px;
+}     
