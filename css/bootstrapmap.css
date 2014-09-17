@@ -211,3 +211,8 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
   list-style-type: none;
   margin-left: -40px;
 }
+
+.radiopos{
+  margin-top: 10px;
+  margin-left: 10px;
+}    

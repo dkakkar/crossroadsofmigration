@@ -14,6 +14,8 @@ dojo.ready(function () {
     $(".navbar").css("margin-right","0px");          
   });
 
+   
+
 });
 
 var map, featureLayer, dialog, featureJSON, identifyTask, identifyParams, myOnClick_connect, tags, last_tags, graphicId;
@@ -27,7 +29,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
     map = BootstrapMap.create("mapDiv",{center: [20, 30],zoom: 3});
         
     var basemap = new ArcGISTiledMapServiceLayer("http://cga2.cga.harvard.edu/arcgis/rest/services/migration/basemap/MapServer");
-    
+    var migrationlayer = "http://cga1.cga.harvard.edu/arcgis/rest/services/immigration/migration_lines_curve_gen_new1/MapServer/0"
     dojo.connect(map, "onLoad", initOperationalLayersFirst);
     dojo.connect(map, "onLoad", mapReady);      
     dojo.connect(map, 'onZoomEnd', function() {
@@ -40,7 +42,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       return (map.extent.getWidth() / map.width);
     }    
 
-    function initOperationalLayersFirst() {      
+    function initOperationalLayersFirst() {            
       var symbol = new SimpleFillSymbol();
       var renderer = new ClassBreaksRenderer(symbol, "Migr_Stock");
       renderer.addBreak({minValue: 1, maxValue: 1001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([0,0,255]), 2), label: "1 - 1,000"});
@@ -49,7 +51,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       renderer.addBreak({minValue: 100001, maxValue: 1000001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,128,0]), 2), label: "100,001 - 1,000,000"});
       renderer.addBreak({minValue: 1000001, maxValue: 12960000, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), label: "1,000,000 +"}); 
 
-      featureLayer = new FeatureLayer("http://cga2.cga.harvard.edu/arcgis/rest/services/migration/migration_lines_curve/MapServer/0", {
+      featureLayer = new FeatureLayer(migrationlayer, {
         mode: FeatureLayer.MODE_ONDEMAND,
         maxAllowableOffset: calcOffset(),
         outFields: ["Ctry1", "Ctry2", "Migr_Stock", "Share_of_Total_Stock", "Share_of_Total_Pop"],
@@ -85,7 +87,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         map.graphics.add(highlightGraphic); 
       });
       graphicId = map.graphicsLayerIds;
-      console.log(graphicId)
+      //console.log(graphicId)
       // create a legend    
       var legendDijit = new Legend({
         map: map,
@@ -98,12 +100,12 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
           legendDijit.startup();        
     }
 
-    // look for a change on the pulldown menu
-    $('#dropDownCountry').on('change', function(){
+    // look for the radio buttona change 
+    $("input").on("change",function(){
+      console.log($("input[name='migrationtype']:checked").val())      
       map.graphics.clear();
       closeDialog();
       map.removeLayer(featureLayer);
-        
       var symbol = new SimpleFillSymbol();    
       var renderer = new ClassBreaksRenderer(symbol, "Migr_Stock");
       renderer.addBreak({minValue: 1, maxValue: 1001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([0,0,255]), 2), label: "1 - 1,000"});
@@ -112,15 +114,15 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       renderer.addBreak({minValue: 100001, maxValue: 1000001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,128,0]), 2), label: "100,001 - 1,000,000"});
       renderer.addBreak({minValue: 1000001, maxValue: 12960000, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), label: "1,000,000 +"});   
 
-      featureLayer = new FeatureLayer("http://cga2.cga.harvard.edu/arcgis/rest/services/migration/migration_lines_curve/MapServer/0", {
+      featureLayer = new FeatureLayer(migrationlayer, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         maxAllowableOffset: calcOffset(),
-        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop"]
+        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
       });
-    
       featureLayer.setRenderer(renderer);
       //console.log($('select option:selected').text());
-      featureLayer.setDefinitionExpression("Ctry1 = '" + $('select option:selected').text() + "'");
+      if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
+      else {featureLayer.setDefinitionExpression("Ctry1 = '" + $('select option:selected').text() + "'");}
       $('.selectpicker').selectpicker('refresh');
       $('select').attr('disabled','disabled');
       map.addLayer(featureLayer);   
@@ -129,8 +131,14 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       // center the layer extent       
       featureLayer.on("UpdateEnd", function(){
         var centerLayer = featureLayer.toJson();        
-        xVal = centerLayer.featureSet.features[0].attributes.X_Coord_1
-        yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_1
+        if($("input[name='migrationtype']:checked").val() != 'origin'){
+          xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
+          yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
+        }
+        else {
+          xVal = centerLayer.featureSet.features[0].attributes.X_Coord_1
+          yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_1                
+        }
         var CenPoint = new Point({ "x": xVal, "y": yVal, " spatialReference": { " wkid": 102100 } });
         map.centerAt(CenPoint);
       });      
@@ -154,9 +162,91 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         bootstrap_alert.info = function(message) {
             $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
         }
-        bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
-        //window.setTimeout( function(){$(".alert").slideUp();}, 15000);
+        
+        if($("input[name='migrationtype']:checked").val() != 'origin'){          
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+        }
+        else {
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+        }
+       
+        map.graphics.add(highlightGraphic); 
+      });
+      mapReady(map);
+    });
+    
+    // look for a change on the pulldown menu
+    $('#dropDownCountry').on('change', function(){
+      console.log($("input[name='migrationtype']:checked").val())
+      map.graphics.clear();
+      closeDialog();
+      map.removeLayer(featureLayer);
+        
+      var symbol = new SimpleFillSymbol();    
+      var renderer = new ClassBreaksRenderer(symbol, "Migr_Stock");
+      renderer.addBreak({minValue: 1, maxValue: 1001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([0,0,255]), 2), label: "1 - 1,000"});
+      renderer.addBreak({minValue: 1001, maxValue: 10001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([0,255,0]), 2), label: "1,001 - 10,000"});
+      renderer.addBreak({minValue: 10001, maxValue: 100001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,255,0]), 2), label: "10,001 - 100,000"});
+      renderer.addBreak({minValue: 100001, maxValue: 1000001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,128,0]), 2), label: "100,001 - 1,000,000"});
+      renderer.addBreak({minValue: 1000001, maxValue: 12960000, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), label: "1,000,000 +"});   
 
+      featureLayer = new FeatureLayer(migrationlayer, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        maxAllowableOffset: calcOffset(),
+        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
+      });
+
+      featureLayer.setRenderer(renderer);     
+      
+      if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
+      else{featureLayer.setDefinitionExpression("Ctry1 = '" + $('select option:selected').text() + "'");}
+      
+      $('.selectpicker').selectpicker('refresh');
+      $('select').attr('disabled','disabled');
+      map.addLayer(featureLayer);   
+      graphicId = map.graphicsLayerIds;
+      console.log(graphicId)
+      // center the layer extent       
+      featureLayer.on("UpdateEnd", function(){
+        var centerLayer = featureLayer.toJson();                
+        if($("input[name='migrationtype']:checked").val() != 'origin'){
+          xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
+          yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
+        }
+        else {
+          xVal = centerLayer.featureSet.features[0].attributes.X_Coord_1
+          yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_1                
+        }
+        var CenPoint = new Point({ "x": xVal, "y": yVal, " spatialReference": { " wkid": 102100 } });
+        map.centerAt(CenPoint);
+      });      
+      $('select').prop('disabled', false);
+      // start dialog        
+      var highlightSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,255,255]), 5);
+
+      //close the dialog when the mouse leaves the highlight graphic
+      map.on("load", function(){
+        map.graphics.enableMouseEvents();
+        map.graphics.on("mouse-out", closeDialog);          
+      });
+                
+      //listen for when the onMouseOver event fires on the countiesGraphicsLayer
+      //when fired, create a new graphic with the geometry from the event.graphic and add it to the maps graphics layer       
+      featureLayer.on("mouse-over", function(evt){      
+        map.graphics.clear();     
+        var highlightGraphic = new esri.Graphic(evt.graphic.geometry,highlightSymbol);
+        //dojo.byId("current_map").innerHTML = "<ul><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>";
+        var bootstrap_alert = function() {};        
+        bootstrap_alert.info = function(message) {
+            $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
+        }
+        if($("input[name='migrationtype']:checked").val() != 'origin'){
+          
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+        }
+        else {
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+        }
         map.graphics.add(highlightGraphic); 
       });
     mapReady(map);  
@@ -189,11 +279,9 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
     map.graphics.clear(); 
     identifyParams.geometry = evt.mapPoint;
     identifyParams.mapExtent = map.extent;
-    var deferred = identifyTask.execute(identifyParams);    
-    
+    var deferred = identifyTask.execute(identifyParams);        
     // remove the old SVG from the map
-    graphicId = document.getElementById(map.graphicsLayerIds[0] + "_layer")
-  
+    graphicId = document.getElementById(map.graphicsLayerIds[0] + "_layer")  
     graphicId.remove();
     
     //console.log(graphicId)
@@ -218,21 +306,29 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         renderer.addBreak({minValue: 100001, maxValue: 1000001, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,128,0]), 2), label: "100,001 - 1,000,000"});
         renderer.addBreak({minValue: 1000001, maxValue: 12960000, symbol: new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), label: "1,000,000 +"});   
 
-        featureLayer = new FeatureLayer("http://cga2.cga.harvard.edu/arcgis/rest/services/migration/migration_lines_curve/MapServer/0", {
+        featureLayer = new FeatureLayer(migrationlayer, {
           mode: FeatureLayer.MODE_SNAPSHOT,
           maxAllowableOffset: calcOffset(),
-          outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop"]
+          outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
         });
             
         featureLayer.setRenderer(renderer);
-        featureLayer.setDefinitionExpression("Ctry1 = '" + feature.attributes.COUNTRY + "'");
+        //featureLayer.setDefinitionExpression("Ctry1 = '" + feature.attributes.COUNTRY + "'");
+        if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + feature.attributes.COUNTRY + "'");}
+        else{featureLayer.setDefinitionExpression("Ctry1 = '" + feature.attributes.COUNTRY + "'");}      
         map.addLayer(featureLayer);
         //console.log(map.graphicsLayerIds);
         // center the layer extent 
         featureLayer.on("UpdateEnd", function(){
           var centerLayer = featureLayer.toJson();          
-          xVal = centerLayer.featureSet.features[0].attributes.X_Coord_1
-          yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_1
+          if($("input[name='migrationtype']:checked").val() != 'origin'){
+            xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
+            yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
+          }
+          else {
+            xVal = centerLayer.featureSet.features[0].attributes.X_Coord_1
+            yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_1                
+          }
           var CenPoint = new Point({ "x": xVal, "y": yVal, " spatialReference": { " wkid": 102100 } });
           map.centerAt(CenPoint);
           //console.log("Layer up")
@@ -259,8 +355,12 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
           bootstrap_alert.info = function(message) {
             $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
           }
-          bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
-          //window.setTimeout( function(){$(".alert").slideUp();}, 15000);
+          if($("input[name='migrationtype']:checked").val() != 'origin'){
+            bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+          }
+          else {
+            bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+          }
           map.graphics.add(highlightGraphic); 
         }); 
         
