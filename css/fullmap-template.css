@@ -1,5 +1,6 @@
 body {
   padding-top: 50px;
+  background: #D0CFD4;
 }
 .starter-template {
   padding: 40px 15px;
@@ -49,4 +50,21 @@ body {
 
 .radiopos{
   margin-top: 20px;
-}    
+} 
+
+#legendDiv{width: 180px;}  
+
+.btn-default.active {
+    background-color: #ffffff;
+    border-color: #adadad;
+    color: #000;
+    font-weight: bold;
+}
+
+.btn-default {
+    background-color: #999999;
+    border-color: #adadad;
+    color: #272727;
+} 
+
+.filter-option.pull-left{font-weight: bold;} 

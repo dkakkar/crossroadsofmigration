@@ -59,14 +59,17 @@
             <li class="active"><a id="about" href="#"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>            
             
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-large"></span> Legend</a>
+              <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-large"></span> Legend</a>
               <ul id="legendDiv" class="dropdown-menu" role="menu"></ul>
+            -->
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown"><span class="glyphicon glyphicon-th-large"></span> Legend</a>
+              <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;"><div id="legendDiv"></div></div>
             </li>           
             <li class="selectCountry"><select id="dropDownCountry" class="selectpicker show-tick show-menu-arrow" data-live-search="true" data-size="5" data-style="btn-inverse"></select></li>                                    
             <li class="radiopos">  
               <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default active"><input name="migrationtype" id="value" value="origin" type="radio" checked>Origin</label>
-                <label class="btn btn-default"><input name="migrationtype" id="destination" value="destination" type="radio">Destination</label>
+                <label class="btn btn-default"><input name="migrationtype" id="value" value="origin" type="radio">Origin</label>
+                <label class="btn btn-default active"><input name="migrationtype" id="destination" value="destination" type="radio" checked>Destination</label>
               </div>
           
         </li>
@@ -89,8 +92,9 @@
                   Suggested Citation: Gest, Justin and Boucher, Anna 'Crossroads of Migration Stock Map', Harvard University Center for Geographic Analysis, accessed via <a href="http://www.crossroadsofmigration.com/" target="_blank">www.crossroadsofmigration.com</a>.
                   <br/><br/>
                   *United Nations, Department of Economic and Social Affairs (2013). Trends in International Migrant Stock: Migrants by Destination and Origin (United Nations database, POP/DB/MIG/Stock/Rev.2013).
+
                 </div>
-                <div class="modal-footer"></div>
+                <div class="modal-footer"><div id="legendDiv"></div></div>
             </div>
       </div>            
     </div>      

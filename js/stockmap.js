@@ -5,7 +5,7 @@ dojo.ready(function () {
     $('select option:contains("Austria")').prop('selected',true);
     $('#dropDownCountry').append( $('<option></option>').val(text).html(text));
   });
-  
+  $('.dropdown-toggle').dropdown();
   $('.selectpicker').selectpicker();
 
   $("#about").click(function(e){
@@ -100,7 +100,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
           legendDijit.startup();        
     }
 
-    // look for the radio buttona change 
+    // look for the radio button change 
     $("input").on("change",function(){
       console.log($("input[name='migrationtype']:checked").val())      
       map.graphics.clear();
@@ -121,7 +121,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       });
       featureLayer.setRenderer(renderer);
       //console.log($('select option:selected').text());
-      if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
+      if($("input[name='migrationtype']:checked").val() == 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
       else {featureLayer.setDefinitionExpression("Ctry1 = '" + $('select option:selected').text() + "'");}
       $('.selectpicker').selectpicker('refresh');
       $('select').attr('disabled','disabled');
@@ -131,7 +131,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       // center the layer extent       
       featureLayer.on("UpdateEnd", function(){
         var centerLayer = featureLayer.toJson();        
-        if($("input[name='migrationtype']:checked").val() != 'origin'){
+        if($("input[name='migrationtype']:checked").val() == 'origin'){
           xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
           yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
         }
@@ -163,8 +163,8 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
             $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
         }
         
-        if($("input[name='migrationtype']:checked").val() != 'origin'){          
-          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+        if($("input[name='migrationtype']:checked").val() == 'origin'){          
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Emigrates: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
         }
         else {
           bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
@@ -198,7 +198,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
 
       featureLayer.setRenderer(renderer);     
       
-      if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
+      if($("input[name='migrationtype']:checked").val() == 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + $('select option:selected').text() + "'");}
       else{featureLayer.setDefinitionExpression("Ctry1 = '" + $('select option:selected').text() + "'");}
       
       $('.selectpicker').selectpicker('refresh');
@@ -209,7 +209,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       // center the layer extent       
       featureLayer.on("UpdateEnd", function(){
         var centerLayer = featureLayer.toJson();                
-        if($("input[name='migrationtype']:checked").val() != 'origin'){
+        if($("input[name='migrationtype']:checked").val() == 'origin'){
           xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
           yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
         }
@@ -314,14 +314,14 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
             
         featureLayer.setRenderer(renderer);
         //featureLayer.setDefinitionExpression("Ctry1 = '" + feature.attributes.COUNTRY + "'");
-        if($("input[name='migrationtype']:checked").val() != 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + feature.attributes.COUNTRY + "'");}
+        if($("input[name='migrationtype']:checked").val() == 'origin'){featureLayer.setDefinitionExpression("Ctry2 = '" + feature.attributes.COUNTRY + "'");}
         else{featureLayer.setDefinitionExpression("Ctry1 = '" + feature.attributes.COUNTRY + "'");}      
         map.addLayer(featureLayer);
         //console.log(map.graphicsLayerIds);
         // center the layer extent 
         featureLayer.on("UpdateEnd", function(){
           var centerLayer = featureLayer.toJson();          
-          if($("input[name='migrationtype']:checked").val() != 'origin'){
+          if($("input[name='migrationtype']:checked").val() == 'origin'){
             xVal = centerLayer.featureSet.features[0].attributes.X_Coord_2
             yVal = centerLayer.featureSet.features[0].attributes.Y_Coord_2
           }
