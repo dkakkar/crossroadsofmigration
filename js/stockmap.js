@@ -29,7 +29,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
     map = BootstrapMap.create("mapDiv",{center: [20, 30],zoom: 3});
         
     var basemap = new ArcGISTiledMapServiceLayer("http://cga2.cga.harvard.edu/arcgis/rest/services/migration/basemap/MapServer");
-    var migrationlayer = "http://cga1.cga.harvard.edu/arcgis/rest/services/immigration/migration_lines_curve_gen_new1/MapServer/0"
+    var migrationlayer = "http://cga1.cga.harvard.edu/arcgis/rest/services/immigration/migration_lines_curve_gen_new2/MapServer/0"
     dojo.connect(map, "onLoad", initOperationalLayersFirst);
     dojo.connect(map, "onLoad", mapReady);      
     dojo.connect(map, 'onZoomEnd', function() {
@@ -117,7 +117,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       featureLayer = new FeatureLayer(migrationlayer, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         maxAllowableOffset: calcOffset(),
-        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
+        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2","OriginShare"]
       });
       featureLayer.setRenderer(renderer);
       //console.log($('select option:selected').text());
@@ -164,7 +164,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         }
         
         if($("input[name='migrationtype']:checked").val() == 'origin'){          
-          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Emigrates: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Emigrates: " + evt.graphic.attributes.OriginShare.toFixed(3) + "%</li></ul>");
         }
         else {
           bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
@@ -193,7 +193,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
       featureLayer = new FeatureLayer(migrationlayer, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         maxAllowableOffset: calcOffset(),
-        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
+        outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2","OriginShare"]
       });
 
       featureLayer.setRenderer(renderer);     
@@ -240,9 +240,9 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         bootstrap_alert.info = function(message) {
             $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
         }
-        if($("input[name='migrationtype']:checked").val() != 'origin'){
+        if($("input[name='migrationtype']:checked").val() == 'origin'){
           
-          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+          bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Emigrants: " + evt.graphic.attributes.OriginShare.toFixed(3) + "%</li></ul>");
         }
         else {
           bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
@@ -309,7 +309,7 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
         featureLayer = new FeatureLayer(migrationlayer, {
           mode: FeatureLayer.MODE_SNAPSHOT,
           maxAllowableOffset: calcOffset(),
-          outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2"]
+          outFields: ["Ctry1", "Ctry2", "Migr_Stock", "X_Coord_1", "Y_Coord_1", "Share_of_Total_Stock", "Share_of_Total_Pop","X_Coord_2", "Y_Coord_2","OriginShare"]
         });
             
         featureLayer.setRenderer(renderer);
@@ -355,8 +355,8 @@ require(["esri/map", "application/bootstrapmap", "esri/layers/FeatureLayer", "es
           bootstrap_alert.info = function(message) {
             $('#alert_placeholder').html('<div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times</button><span>'+message+'</span></div>')
           }
-          if($("input[name='migrationtype']:checked").val() != 'origin'){
-            bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
+          if($("input[name='migrationtype']:checked").val() == 'origin'){
+            bootstrap_alert.info("<ul class='alertCountryInfo'><li>To " + evt.graphic.attributes.Ctry1 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Emigrants: " + evt.graphic.attributes.OriginShare.toFixed(3) + "%</li></ul>");
           }
           else {
             bootstrap_alert.info("<ul class='alertCountryInfo'><li>From " + evt.graphic.attributes.Ctry2 + ": " +  numberWithCommas(evt.graphic.attributes.Migr_Stock) + "</li><br/><li>As Share of Total Stock: " + Math.round(evt.graphic.attributes.Share_of_Total_Stock*100)/100  + "%</li><br/><li>As Share of Total Population: " + Math.round(evt.graphic.attributes.Share_of_Total_Pop*100)/100 + "%</li></ul>");
