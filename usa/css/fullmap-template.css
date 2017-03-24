@@ -28,12 +28,12 @@ body {
     font-weight: bold;
     font-size: 12px;
     margin-top: 3px;
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 #legend div {
     clear: both;
-	margin-bottom: 1px;
+  margin-bottom: 1px;
 }
 
 .color {
@@ -41,7 +41,7 @@ body {
     width: 20px;
     margin-right: 3px;
     float: left;
-    display: block;		
+    display: block;   
 } 
 
 .modal-sm {
@@ -68,3 +68,29 @@ body {
 } 
 
 .filter-option.pull-left{font-weight: bold;} 
+
+.selectSlider { 
+    margin-left: 100px;
+    margin-top: -40px;
+ }
+
+.selectSliderButton { 
+    margin-top: 10px;
+ }
+
+ .timepop{ 
+  margin-top: 4px;
+  color: #fff;
+} 
+
+.timetitle{  
+  color: #fff;
+}
+
+
+.esriLegendService {
+  padding-bottom: 20px;
+  background-color: #222222;
+  color: #fff;
+}
+

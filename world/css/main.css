@@ -1,0 +1,30 @@
+#myfooter{
+	height: 40px;
+	background-color:#222;
+	border-color: #222;
+	border-width:2px;
+	border-style: solid;
+	border-radius: 4px;
+	margin-top: 20px;
+}
+
+.mapintro{
+	text-align: justify;
+}
+
+.mapbtn{
+	margin-bottom: 10px;
+}
+
+.navbar-brand {
+  float: left;
+  height: 50px;
+  padding: 15px 15px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #FFFFFF;
+}

@@ -1,0 +1,229 @@
+/*** Esri Map ***/
+.map {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100px;
+  max-height: 100%;
+ 	text-align: left;
+  overflow: hidden;
+}
+
+.map > img {
+	 text-align: left;
+}
+
+/*** Restyle Esri Zoomin-out ***/
+.esriSimpleSlider {
+  border: 1px solid #cccccc;
+  top: 15px;
+  left: 15px;
+}
+
+.esriSimpleSliderVertical .esriSimpleSliderIncrementButton,
+.esriSimpleSliderVertical .esriSimpleSliderDecrementButton{
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+}
+.esriSimpleSliderVertical .esriSimpleSliderIncrementButton {
+  border-bottom: 1px solid #cccccc;
+}
+
+/*** Restyle Esri Popup ***/
+.esriPopupWrapper {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  background-color: #f7f7f7;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #333333;
+}
+
+.esriPopup .titlePane, .esriPopup .contentPane, .esriPopup .actionsPane  {
+  padding: 8px 14px;
+  color: #333333;
+  background-color: #f7f7f7;
+  border: none;
+  max-height: 70px;
+}
+
+.esriPopup .titlePane, {
+  padding-top: 10px;
+  color: #f3f3f3;
+}
+
+.esriPopup .contentPane {
+  border-top: 1px solid #ebebeb;
+}
+
+.esriPopup .actionsPane {
+  margin-bottom: 15px;
+}
+
+.esriButton.close {
+  width: 21px;
+  line-height: inherit;
+}
+
+.esriPopup .titleButton.maximize, .esriPopup .titleButton.close,
+.esriPopup .titleButton.prev, .esriPopup .titleButton.next, .titleButton.restore {
+  /*display: none;*/
+  -webkit-filter: invert(80%);
+  margin-top: 8px;
+  margin-right: 5px;
+}
+
+/*** Restyle Geocoder widget ***/
+.simpleGeocoder .esriGeocoderContainer {
+  width: 100%;
+}
+
+.simpleGeocoder .esriGeocoder {
+  border: 1px solid #cccccc;
+}
+
+.simpleGeocoder .esriGeocoderResults {
+  border: 1px solid #cccccc;
+}
+
+.simpleGeocoder .esriGeocoder input {
+  width: 75%;
+  padding: 7px 0 6px;
+  font-size: 14px;
+  line-height: 18px;
+  color: #555555;
+}
+
+.simpleGeocoder .esriGeocoderIcon {
+  margin: 9px 0 6px 6px;
+}
+
+.simpleGeocoder .esriGeocoderHasValue .esriGeocoderReset {
+  margin: 8px 4px 5px 1px;
+}
+
+/*** Fix Bootstrap modal bug ***/
+body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+  margin-right: 0;
+  margin-top: 0;
+}
+
+#alert_placeholder{
+  position: fixed; 
+  bottom: 0; 
+  z-index:50;  
+}
+#m1{background-color:#e41a1c; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m2{background-color:#377eb8; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m3{background-color:#4daf4a; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m4{background-color:#984ea3; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m5{background-color:#ff7f00; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m6{background-color:#ffff33; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+#m7{background-color:#a65628; color: #000000; margin-top: -5px; margin-bottom: -5px;}
+
+#cntryGrp{width: 280px;}
+
+#mapDiv{min-height: 50px;}
+
+#mapDiv4 {
+  height: 300px; 
+}
+
+#myTabContent {
+  margin-right: 15px;
+  margin-left:  15px;
+}
+
+.row-map {
+  background: #eee;
+}
+
+[class*="col-"] {
+  background-color: #eee;
+  border: 1px solid #E7E7E7;
+  text-align: center;
+}
+
+.bg-none{
+  background: none;
+  border: none;
+}
+
+.no-col-padding {
+  padding: 0;
+}
+
+.tab-content {
+  margin-top: 10px;
+}
+
+.container.main {
+  padding-bottom: 20px;
+}        
+
+@media (max-width:767px) {
+  .container.main {
+    margin-top: 10px;
+    padding-bottom: 0;
+  }  
+  #myTabContent {
+    margin-left: 0;
+    margin-right: 0;
+  }      
+}
+
+
+#alert_placeholder{
+  position: fixed; 
+  bottom: 0; 
+  z-index:50;  
+}
+
+.selectCountry{
+  margin-top: 12px; 
+}
+
+.btn {
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 2px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.alert-info {
+    background-color: #222;
+    border-color: #000;
+    color: #fff;
+}
+
+.alertCountryInfo{
+  list-style-type: none;
+  margin-left: -40px;
+}
+
+.radiopos{
+  margin-top: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
+} 
+
+.container>.navbar-collapse, .container-fluid>.navbar-collapse {
+  margin-right: 0;
+  margin-left:  0;
+} 
+
+
+
+ 

@@ -20,6 +20,7 @@
   top: 15px;
   left: 15px;
 }
+
 .esriSimpleSliderVertical .esriSimpleSliderIncrementButton,
 .esriSimpleSliderVertical .esriSimpleSliderDecrementButton{
   font-weight: 500;
@@ -181,7 +182,7 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 }
 
 .selectCountry{
-  margin-top: 10px; 
+  margin-top: 12px; 
 }
 
 .btn {
@@ -213,6 +214,15 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 }
 
 .radiopos{
-  margin-top: 10px;
+  margin-top: 12px;
   margin-left: 10px;
-}    
+  margin-right: 10px;
+} 
+
+.container>.navbar-collapse, .container-fluid>.navbar-collapse {
+  margin-right: 0;
+  margin-left:  -30px;
+}  
+
+
+ 
